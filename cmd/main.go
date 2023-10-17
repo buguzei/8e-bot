@@ -6,6 +6,7 @@ import (
 	"github.com/joho/godotenv"
 	"log"
 	"os"
+	"strconv"
 )
 
 func main() {
@@ -15,6 +16,9 @@ func main() {
 	}
 
 	token := os.Getenv("TOKEN")
+	admin, _ := strconv.Atoi(os.Getenv("ADMIN"))
+	admin1, _ := strconv.Atoi(os.Getenv("ADMIN1"))
+	admin2, _ := strconv.Atoi(os.Getenv("ADMIN2"))
 
 	bot, err := tgbotapi.NewBotAPI(token)
 	if err != nil {
@@ -23,5 +27,5 @@ func main() {
 
 	log.Printf("Authorized on account %s", bot.Self.UserName)
 
-	internal.Start(bot)
+	internal.Start(bot, int64(admin), int64(admin1), int64(admin2))
 }
