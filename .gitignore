@@ -1,2 +1,4 @@
 .idea
 config/.env
+/db/dbdata/
+/db/docker-entrypoint-initdb.d/

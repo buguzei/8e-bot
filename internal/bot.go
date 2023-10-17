@@ -27,10 +27,7 @@ func Start(bot *tgbotapi.BotAPI) {
 			case "cancel":
 				delMsg := tgbotapi.NewDeleteMessage(chatID, msgID[chatID])
 
-				_, err := bot.Send(delMsg)
-				if err != nil {
-					log.Println(err)
-				}
+				_, _ = bot.Send(delMsg)
 
 				wordStage[chatID] = false
 			}
@@ -43,9 +40,15 @@ func Start(bot *tgbotapi.BotAPI) {
 
 				if wordStage[chatID] {
 					forbiddenWords = append(forbiddenWords, strings.ToLower(update.Message.Text))
+					wordStage[chatID] = false
 					fmt.Println(forbiddenWords)
+					continue
 				}
 
+				//chatID := update.Message.Chat.ID
+
+				msgID[chatID] = update.Message.MessageID
+				go DeleteForbiddenWord(bot, chatID, msgID[chatID], strings.ToLower(update.Message.Text), forbiddenWords)
 				switch update.Message.Text {
 				case "/newword":
 					msg := tgbotapi.NewMessage(chatID, "Введите новое запрещенное слово:")
@@ -65,12 +68,8 @@ func Start(bot *tgbotapi.BotAPI) {
 				continue
 			}
 
-			if update.Message.Chat.IsGroup() || update.Message.Chat.IsSuperGroup() {
-				chatID := update.Message.Chat.ID
-
-				msgID[chatID] = update.Message.MessageID
-				DeleteForbiddenWord(bot, chatID, msgID[chatID], strings.ToLower(update.Message.Text), forbiddenWords)
-			}
+			/*if update.Message.Chat.IsGroup() || update.Message.Chat.IsSuperGroup() {
+			}*/
 		}
 
 	}
