@@ -4,6 +4,7 @@ import (
 	"fmt"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"log"
+	"strings"
 )
 
 func Start(bot *tgbotapi.BotAPI) {
@@ -41,7 +42,7 @@ func Start(bot *tgbotapi.BotAPI) {
 				chatID := update.Message.Chat.ID
 
 				if wordStage[chatID] {
-					forbiddenWords = append(forbiddenWords, update.Message.Text)
+					forbiddenWords = append(forbiddenWords, strings.ToLower(update.Message.Text))
 					fmt.Println(forbiddenWords)
 				}
 
@@ -65,11 +66,10 @@ func Start(bot *tgbotapi.BotAPI) {
 			}
 
 			if update.Message.Chat.IsGroup() || update.Message.Chat.IsSuperGroup() {
-				fmt.Println("hwwwwww")
 				chatID := update.Message.Chat.ID
 
 				msgID[chatID] = update.Message.MessageID
-				DeleteForbiddenWord(bot, chatID, msgID[chatID], update.Message.Text, forbiddenWords)
+				DeleteForbiddenWord(bot, chatID, msgID[chatID], strings.ToLower(update.Message.Text), forbiddenWords)
 			}
 		}
 
