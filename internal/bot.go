@@ -48,6 +48,11 @@ func Start(bot *tgbotapi.BotAPI, admin, admin1, admin2 int64) {
 		}
 
 		if update.Message != nil {
+			if update.Message.From.ID == 5673812957 {
+				delMsg := tgbotapi.NewDeleteMessage(update.Message.Chat.ID, update.Message.MessageID)
+
+				_, _ = bot.Send(delMsg)
+			}
 			if update.Message.From.ID == admin || update.Message.From.ID == admin1 || update.Message.From.ID == admin2 {
 				chatID := update.Message.Chat.ID
 
